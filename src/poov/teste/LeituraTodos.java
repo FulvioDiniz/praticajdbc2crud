@@ -1,8 +1,8 @@
 package poov.teste;
-import java.sql.*;
-import java.util.Scanner;
 
-public class LeituraBD {
+import java.sql.*;
+
+public class LeituraTodos {
     public static void main(String[] args) {
         String caminho = "jdbc:postgresql";
         String host = "localhost";
@@ -18,26 +18,24 @@ public class LeituraBD {
             Class.forName(classeDriver);
             conexao = DriverManager.getConnection(url, login, senha);
             System.out.println("Conexão com o banco de dados estabelecida.");
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Codigo da vacina");
-            int codigo = scanner.nextInt();
-            String query = "SELECT * FROM vacina WHERE codigo = ? AND situacao = 'Ativo'";
-            PreparedStatement statement = conexao.prepareStatement(query);
-            statement.setInt(1, codigo);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                System.out.println("Vacina encontrada!");
-                System.out.println("Nome: " + resultSet.getString("nome"));
-                System.out.println("Descricao: " + resultSet.getString("descricao"));
-            } else {
-                System.out.println("Vacina não encontrada!");
+            String query = "SELECT * FROM vacina where situacao = 'Ativo'";
+            Statement statement = conexao.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if(!resultSet.next()) {
+                System.out.println("Nenhuma vacina encontrada!");
+            }else{
+                while (resultSet.next()) {
+                    System.out.println("Vacina encontrada!");
+                    System.out.println("Codigo: " + resultSet.getInt("codigo"));
+                    System.out.println("Nome: " + resultSet.getString("nome"));
+                    System.out.println("Descricao: " + resultSet.getString("descricao"));
+                }
             }
-            resultSet.close();
-            scanner.close();
+            
+
             statement.close();
 
-
-            //LEITURA DO BANCO
+            // LEITURA DO BANCO
         } catch (ClassNotFoundException ex) {
             System.out.println("Erro ao carregar o driver JDBC.");
         } catch (SQLException ex) {
@@ -66,7 +64,6 @@ public class LeituraBD {
             }
         }
 
-
     }
-    
+
 }

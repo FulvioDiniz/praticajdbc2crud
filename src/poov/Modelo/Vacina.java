@@ -4,15 +4,25 @@ public class Vacina {
     private Long codigo;
     private String nome;
     private String descricao;
+    private Situacao situacao;
 
     public Vacina() {
 
     }
 
-    public Vacina(long codigo, String nome, String descricao) {
+    public Vacina(Long codigo, String nome, String descricao, Situacao situacao) {
         this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
+        this.situacao = situacao;
+    }
+
+    public Situacao getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(Situacao situacao) {
+        this.situacao = situacao;
     }
 
     public Long getCodigo() {
@@ -41,8 +51,8 @@ public class Vacina {
     }
 
     @Override
-    public String toString() {
-        return "Vacina [codigo=" + codigo + ", descricao=" + descricao + ", nome=" + nome + "]";
+   public String toString() {
+        return "Vacina [codigo=" + codigo + ", descricao=" + descricao + ", nome=" + nome + ", situacao=" + situacao + "]";
     }
 
     @Override

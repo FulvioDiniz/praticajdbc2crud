@@ -1,8 +1,9 @@
 package poov.teste;
+
 import java.sql.*;
 import java.util.Scanner;
 
-public class LeituraBD {
+public class DeleteBanco {
     public static void main(String[] args) {
         String caminho = "jdbc:postgresql";
         String host = "localhost";
@@ -18,26 +19,33 @@ public class LeituraBD {
             Class.forName(classeDriver);
             conexao = DriverManager.getConnection(url, login, senha);
             System.out.println("Conexão com o banco de dados estabelecida.");
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Codigo da vacina");
-            int codigo = scanner.nextInt();
-            String query = "SELECT * FROM vacina WHERE codigo = ? AND situacao = 'Ativo'";
-            PreparedStatement statement = conexao.prepareStatement(query);
-            statement.setInt(1, codigo);
-            ResultSet resultSet = statement.executeQuery();
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Digite o codigo da vacina que deseja deletar: ");
+            int codigo = sc.nextInt();
+            String sql = "SELECT * FROM vacina WHERE codigo = ? where situacao = 'Ativo'";
+            String query = "DELETE FROM vacina WHERE codigo = ? where situacao = 'Ativo'";
+            PreparedStatement statement1 = conexao.prepareStatement(sql);
+            statement1.setInt(1, codigo);
+            ResultSet resultSet = statement1.executeQuery();
             if (resultSet.next()) {
-                System.out.println("Vacina encontrada!");
+                System.out.println("Vacina deletada!");
+                System.out.println("Codigo: " + resultSet.getInt("codigo"));
                 System.out.println("Nome: " + resultSet.getString("nome"));
                 System.out.println("Descricao: " + resultSet.getString("descricao"));
-            } else {
-                System.out.println("Vacina não encontrada!");
             }
-            resultSet.close();
-            scanner.close();
+            PreparedStatement statement = conexao.prepareStatement(query);
+            statement.setInt(1, codigo);
+            if (statement.executeUpdate() == 0) {
+                System.out.println("Nenhuma vacina encontrada!");
+            } else {
+                System.out.println("Vacina deletada!");
+            }
+
+            statement1.close();
             statement.close();
+            sc.close();
 
-
-            //LEITURA DO BANCO
+            // LEITURA DO BANCO
         } catch (ClassNotFoundException ex) {
             System.out.println("Erro ao carregar o driver JDBC.");
         } catch (SQLException ex) {
@@ -66,7 +74,6 @@ public class LeituraBD {
             }
         }
 
-
     }
-    
+
 }

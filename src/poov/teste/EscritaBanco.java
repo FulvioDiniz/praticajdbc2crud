@@ -31,8 +31,6 @@ public class EscritaBanco {
             PreparedStatement statement = conexao.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, vacina.getNome());
             statement.setString(2, vacina.getDescricao());
-            // statement.executeUpdate();
-
             if (statement.executeUpdate() == 1) {
                 System.out.println("Vacina cadastrada com sucesso!");
                 ResultSet resultSet = statement.getGeneratedKeys();
@@ -43,6 +41,7 @@ public class EscritaBanco {
                 }
                 resultSet.close();
             }
+            scanner.close();
 
             // ESCRITA NO BANCO
         } catch (ClassNotFoundException ex) {

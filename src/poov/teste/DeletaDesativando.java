@@ -1,8 +1,9 @@
 package poov.teste;
+
 import java.sql.*;
 import java.util.Scanner;
 
-public class LeituraBD {
+public class DeletaDesativando {
     public static void main(String[] args) {
         String caminho = "jdbc:postgresql";
         String host = "localhost";
@@ -18,26 +19,19 @@ public class LeituraBD {
             Class.forName(classeDriver);
             conexao = DriverManager.getConnection(url, login, senha);
             System.out.println("Conexão com o banco de dados estabelecida.");
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Codigo da vacina");
-            int codigo = scanner.nextInt();
-            String query = "SELECT * FROM vacina WHERE codigo = ? AND situacao = 'Ativo'";
-            PreparedStatement statement = conexao.prepareStatement(query);
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Digite o codigo da vacina que deseja desativar: ");
+            int codigo = sc.nextInt();
+            String sql = "UPDATE vacina SET situacao = 'Inativo' WHERE codigo = ?";
+            PreparedStatement statement = conexao.prepareStatement(sql);
             statement.setInt(1, codigo);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                System.out.println("Vacina encontrada!");
-                System.out.println("Nome: " + resultSet.getString("nome"));
-                System.out.println("Descricao: " + resultSet.getString("descricao"));
+            if (statement.executeUpdate() == 0) {
+                System.out.println("Nenhuma vacina encontrada!");
             } else {
-                System.out.println("Vacina não encontrada!");
+                System.out.println("Vacina desativada!");
             }
-            resultSet.close();
-            scanner.close();
             statement.close();
-
-
-            //LEITURA DO BANCO
+            sc.close();
         } catch (ClassNotFoundException ex) {
             System.out.println("Erro ao carregar o driver JDBC.");
         } catch (SQLException ex) {
@@ -66,7 +60,6 @@ public class LeituraBD {
             }
         }
 
-
     }
-    
+
 }
